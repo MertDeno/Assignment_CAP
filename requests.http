@@ -1,0 +1,6 @@
+GET http://localhost:4004/RegisterService/getStudentCourses(studentId='1')
+
+POST http://localhost:4004/RegisterService/studentCourse
+Content-Type: application/json
+
+{"studentId":1, "courseId":"COMP277"}
