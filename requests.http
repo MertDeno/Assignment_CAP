@@ -1,6 +1,15 @@
-GET http://localhost:4004/RegisterService/getStudentCourses(studentId='1')
 
-POST http://localhost:4004/RegisterService/studentCourse
-Content-Type: application/json
+//GET http://localhost:4004/RegisterService/Courses(courseId='COMP112')
+//http://localhost:4004/RegisterService/Students(2)?$expand=courses($select=courseId,courseName)
 
-{"studentId":1, "courseId":"COMP277"}
+
+//GET http://localhost:4004/RegisterService/Students(1)?$expand=courses
+
+//POST http://localhost:4004/RegisterService/addCourse
+//Content-Type: application/json
+
+//{"studentId":"2", "courseId":"COMP112"}
+
+
+//Triggering delete method
+GET http://localhost:4004/RegisterService/Students(1)/courses('MUS106')/

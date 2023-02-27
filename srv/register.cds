@@ -9,12 +9,7 @@ service RegisterService@(path: '/RegisterService') {
         createdAt,
         createdBy
     };
-    entity studentCourse as projection on db.studentCourse excluding {
-        modifiedAt,
-        modifiedBy,
-        createdAt,
-        createdBy
-    };
-    function getStudentCourses(studentId: String) returns array of String;
-    action addCourse(studentId: String, courseId: String);
+        
+    action addCourse(courseId: String, courseName: String);
+    action deleteCourse(courseId: String);
 }

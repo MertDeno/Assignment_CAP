@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="RegisterService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="Students" EntityType="RegisterService.Students">
+                    <NavigationPropertyBinding Path="courses" Target="Courses"/>
+                </EntitySet>
+                <EntitySet Name="Courses" EntityType="RegisterService.Courses">
+                    <NavigationPropertyBinding Path="students" Target="Students"/>
+                </EntitySet>
+                <EntitySet Name="studentCourse" EntityType="RegisterService.studentCourse"/>
+                <ActionImport Name="addCourse" Action="RegisterService.addCourse"/>
+                <FunctionImport Name="deleteCourse" Function="RegisterService.deleteCourse"/>
+            </EntityContainer>
+            <EntityType Name="Students">
+                <Key>
+                    <PropertyRef Name="studentId"/>
+                </Key>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="studentId" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="studentName" Type="Edm.String"/>
+                <NavigationProperty Name="courses" Type="Collection(RegisterService.Courses)" Partner="students"/>
+            </EntityType>
+            <EntityType Name="Courses">
+                <Key>
+                    <PropertyRef Name="courseId"/>
+                </Key>
+                <Property Name="courseId" Type="Edm.String" Nullable="false"/>
+                <Property Name="courseName" Type="Edm.String"/>
+                <NavigationProperty Name="students" Type="RegisterService.Students" Partner="courses">
+                    <ReferentialConstraint Property="students_studentId" ReferencedProperty="studentId"/>
+                </NavigationProperty>
+                <Property Name="students_studentId" Type="Edm.Int32"/>
+            </EntityType>
+            <EntityType Name="studentCourse">
+                <Key>
+                    <PropertyRef Name="studentId"/>
+                </Key>
+                <Property Name="studentId" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="courseId" Type="Edm.String"/>
+            </EntityType>
+            <Action Name="addCourse" IsBound="false">
+                <Parameter Name="studentId" Type="Edm.String"/>
+                <Parameter Name="courseId" Type="Edm.String"/>
+            </Action>
+            <Function Name="deleteCourse" IsBound="false" IsComposable="false">
+                <Parameter Name="studentId" Type="Edm.String"/>
+                <Parameter Name="courseId" Type="Edm.String"/>
+                <ReturnType Type="Edm.String"/>
+            </Function>
+            <Annotations Target="RegisterService.Students/createdAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+                </Annotations>
+                <Annotations Target="RegisterService.Students/createdBy">
+                    <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                    <Annotation Term="Core.Immutable" Bool="true"/>
+                    <Annotation Term="Core.Computed" Bool="true"/>
+                    <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+                        </Annotations>
+                        <Annotations Target="RegisterService.Students/modifiedAt">
+                            <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                            <Annotation Term="Core.Computed" Bool="true"/>
+                            <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+                            </Annotations>
+                            <Annotations Target="RegisterService.Students/modifiedBy">
+                                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                <Annotation Term="Core.Computed" Bool="true"/>
+                                <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                    <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+                                    </Annotations>
+                                </Schema>
+                            </edmx:DataServices>
+                        </edmx:Edmx>

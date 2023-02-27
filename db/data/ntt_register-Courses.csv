@@ -1,10 +1,10 @@
-courseId, courseName
-MATH101,Calculus I
-MATH102,Calculus II
-COMP111,Introduction to Programming I
-COMP112,Introduction to Programming II
-COMP144,Data Structures I
-COMP244,Data Structures II
-COMP255,Theory of Computation
-COMP256,Operating Systems
-COMP277,Introduction to Network Systems
+courseId, courseName, students_studentId
+MATH101,Calculus I,1
+MATH102,Calculus II,2
+COMP111,Introduction to Programming I,3
+COMP112,Introduction to Programming II,2
+COMP144,Data Structures I,1
+COMP244,Data Structures II,3
+COMP255,Theory of Computation,1
+COMP256,Operating Systems,2
+COMP277,Introduction to Network Systems,3

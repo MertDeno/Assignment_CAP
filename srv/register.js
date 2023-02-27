@@ -1,23 +1,54 @@
+const req = require("express/lib/request");
 
 module.exports = (srv) => {
-    srv.on('getStudentCourses', async (req) => {
-        let stdId = req.data.studentId
 
+    var stdId;
+
+    srv.before("READ", "Students", async(req) => {      //For adding courses to a user, studentId is fetched firstly
+        if(req.data.studentId != undefined){
+            stdId = req.data.studentId
+            return            
+        }
+    })
+    
+    srv.on('addCourse', async(req) => {
+        let courseId = req.data.courseId
+        let courseName = req.data.courseName
         const db = srv.transaction(req)
-        let {studentCourse} = srv.entities
+        let {Students} = srv.entities
+        let {Courses} = srv.entities
+        const results = await db.read(Students).where({studentId: stdId})
+        const courses = await db.read(Courses).where({courseId: courseId})
+    
 
-        const results = await db.read(studentCourse).where({studentId: stdId})
-        return results
+        if(courses.length === 0 && results.length != 0){
+            try {
+                db.run([
+                    INSERT.into(Courses).entries({courseId: courseId, courseName: courseName, students_studentId: stdId})
+                ])  
+            } catch (error) {
+                console.log(error)   
+            }
+        }
+        else if(courses.length === 0){      //If the record exists, the course cannot be added
+            console.log("The record exists")
+        } 
+
     });
 
-    srv.on('addCourse', async(req) => {
-        let stdId = req.data.studentId
+    srv.on('deleteCourse', async(req) => {
         let courseId = req.data.courseId
         const db = srv.transaction(req)
-        let {studentCourse} = srv.entities
+        let {Courses} = srv.entities
+        const regCourses = SELECT.from(Courses).where({students_studentId: stdId}) 
+        
+        if(regCourses.length <= 1){                 //For one-to-many, a student at least should have a course
+            console.log('Each student should register to a course')
+            return
+        }
 
         db.run([
-            INSERT.into(studentCourse) .entries({studentId: stdId, courseId: courseId})
-        ])
-    })
+            DELETE.from(Courses).where({students_studentId: stdId, courseId: courseId}) 
+        ])                        
+    });
 };

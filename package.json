@@ -11,10 +11,15 @@
     "require": "^2.4.20"
   },
   "devDependencies": {
+    "@sap/ux-specification": "^1.102.17",
     "sqlite3": "^5.1.4"
   },
   "scripts": {
-    "start": "cds run"
+    "start": "cds run",
+    "watch-nttdata_std_register": "cds watch --open nttdata_std_register/webapp/index.html?sap-ui-xx-viewCache=false",
+    "watch-nttdata": "cds watch --open nttdata/webapp/index.html?sap-ui-xx-viewCache=false",
+    "watch-project1": "cds watch --open project1/webapp/index.html?sap-ui-xx-viewCache=false",
+    "watch-nttproject": "cds watch --open nttproject/webapp/index.html?sap-ui-xx-viewCache=false"
   },
   "engines": {
     "node": "^16.15"
@@ -49,9 +54,15 @@
       "db": {
         "kind": "sqlite",
         "credentials": {
-          "database": "registerSystem.db"
+          "database": "registerSystemNtt.db"
         }
       }
     }
-  }
+  },
+  "sapux": [
+    "app/nttdata_std_register",
+    "app/nttdata",
+    "app/project1",
+    "app/nttproject"
+  ]
 }
