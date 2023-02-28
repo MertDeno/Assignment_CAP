@@ -10,6 +10,10 @@ module.exports = (srv) => {
             return            
         }
     })
+
+    srv.after("READ", "Students", async(req) => {      //For adding courses to a user, studentId is fetched firstly
+        
+    })
     
     srv.on('addCourse', async(req) => {
         let studentId = stdId
@@ -33,14 +37,12 @@ module.exports = (srv) => {
                 console.log('All Fields should be filled')
             }
         }
-        else if(courses.length === 0){      //If the record exists, the course cannot be added
+        else if(courses.length != 0){      //If the record exists, the course cannot be added
             console.log("The record exists")
         } 
 
         return Courses
-
     });
-
 
 
     srv.on('deleteCourse', async(req) => {
