@@ -22,12 +22,15 @@ module.exports = (srv) => {
         const courses = await db.read(Courses).where({courseId: courseId})
     
         if(courses.length === 0 && results.length != 0){
-            try {
-  //              db.run([
-                    await db.insert({courseId: courseId, courseName: courseName, students_studentId: studentId}).into(Courses)
-   //             ])  
-            } catch (error) {
-                console.log(error)   
+            if(courseId.trim().length != 0 && courseName.trim().length != 0){
+                try {
+                    await db.insert({courseId: courseId, courseName: courseName, students_studentId: studentId}).into(Courses)  
+                } catch (error) {
+                    console.log(error)   
+                }
+            }
+            else{
+                console.log('All Fields should be filled')
             }
         }
         else if(courses.length === 0){      //If the record exists, the course cannot be added
@@ -37,6 +40,8 @@ module.exports = (srv) => {
         return Courses
 
     });
+
+
 
     srv.on('deleteCourse', async(req) => {
         let courseId = req.query.SELECT.from.ref[1].where[2].val
