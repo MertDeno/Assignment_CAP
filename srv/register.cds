@@ -8,8 +8,11 @@ service RegisterService@(path: '/RegisterService') {
         modifiedBy,
         createdAt,
         createdBy
+    } actions {
+        @Common : { IsActionCritical }
+        action deleteCourse()
     };
         
-    action addCourse(courseId: String, courseName: String);
-    action deleteCourse(courseId: String);
+    action addCourse(courseId: String, courseName: String) returns array of Courses;
+//    action deleteCourse(courseId: String);
 }

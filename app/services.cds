@@ -40,10 +40,6 @@ annotate RegisterService.Students with @(
     }
 );
 
-annotate RegisterService.deleteCourse with @(
-    Common : { IsActionCritical }
-);
-
 annotate RegisterService.Courses with @(
     UI.LineItem #Courses : [
         {
@@ -62,7 +58,7 @@ annotate RegisterService.Courses with @(
         },
         {
             $Type : 'UI.DataFieldForAction',
-            Action : 'RegisterService.EntityContainer/deleteCourse',
+            Action : 'RegisterService.deleteCourse',
             Label : 'Delete',
             Inline : true,
             ![@UI.Importance] : #Medium,

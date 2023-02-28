@@ -12,6 +12,7 @@ module.exports = (srv) => {
     })
     
     srv.on('addCourse', async(req) => {
+        let studentId = stdId
         let courseId = req.data.courseId
         let courseName = req.data.courseName
         const db = srv.transaction(req)
@@ -37,18 +38,17 @@ module.exports = (srv) => {
     });
 
     srv.on('deleteCourse', async(req) => {
-        let courseId = req.data.courseId
+        let courseId = req.query.SELECT.from.ref[1].where[2].val
         const db = srv.transaction(req)
         let {Courses} = srv.entities
-        const regCourses = SELECT.from(Courses).where({students_studentId: stdId}) 
-        
-        if(regCourses.length <= 1){                 //For one-to-many, a student at least should have a course
+        const regCourses = await db.read(Courses).where({students_studentId: stdId})
+        if(regCourses.length === 1){                 //For one-to-many, a student at least should have a course
             console.log('Each student should register to a course')
             return
         }
 
         db.run([
             DELETE.from(Courses).where({students_studentId: stdId, courseId: courseId}) 
-        ])                        
+        ])   
     });
 };
