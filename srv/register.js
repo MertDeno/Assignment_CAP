@@ -21,12 +21,11 @@ module.exports = (srv) => {
         const results = await db.read(Students).where({studentId: stdId})
         const courses = await db.read(Courses).where({courseId: courseId})
     
-
         if(courses.length === 0 && results.length != 0){
             try {
-                db.run([
-                    INSERT.into(Courses).entries({courseId: courseId, courseName: courseName, students_studentId: stdId})
-                ])  
+  //              db.run([
+                    await db.insert({courseId: courseId, courseName: courseName, students_studentId: studentId}).into(Courses)
+   //             ])  
             } catch (error) {
                 console.log(error)   
             }
@@ -34,6 +33,8 @@ module.exports = (srv) => {
         else if(courses.length === 0){      //If the record exists, the course cannot be added
             console.log("The record exists")
         } 
+
+        return Courses
 
     });
 
