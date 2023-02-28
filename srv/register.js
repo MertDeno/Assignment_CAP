@@ -10,10 +10,6 @@ module.exports = (srv) => {
             return            
         }
     })
-
-    srv.after("READ", "Students", async(req) => {      //For adding courses to a user, studentId is fetched firstly
-        
-    })
     
     srv.on('addCourse', async(req) => {
         let studentId = stdId
