@@ -1,1 +1,10 @@
-{}
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "Registering Database",
+            "database": "${workspaceFolder:Assignment_CAP}/database.db"
+        }
+    ]
+}

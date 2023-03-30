@@ -54,7 +54,7 @@
       "db": {
         "kind": "sqlite",
         "credentials": {
-          "database": "NTTRegister.db"
+          "database": "database.db"
         }
       }
     }

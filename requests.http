@@ -12,4 +12,4 @@
 
 
 //Triggering delete method
-GET http://localhost:4004/RegisterService/Students(1)/courses('MUS106')/
+GET http://localhost:4004/RegisterService/Students(1)/courses

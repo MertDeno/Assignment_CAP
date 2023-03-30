@@ -9,23 +9,37 @@ module.exports = (srv) => {
             stdId = req.data.studentId
             return            
         }
-    })
+    });
+
     
     srv.on('addCourse', async(req) => {
         let studentId = stdId
         let courseId = req.data.courseId
         let courseName = req.data.courseName
-        const db = srv.transaction(req)
+        //const db = srv.transaction(req)
+        const tx = srv.transaction()
+
         let {Students} = srv.entities
         let {Courses} = srv.entities
-        const results = await db.read(Students).where({studentId: stdId})
-        const courses = await db.read(Courses).where({courseId: courseId})
+        const results = await tx.read(Students).where({studentId: stdId})
+        const courses = await tx.read(Courses).where({courseId: courseId})
     
         if(courses.length === 0 && results.length != 0){
             if(courseId.trim().length != 0 && courseName.trim().length != 0){
                 try {
-                    await db.insert({courseId: courseId, courseName: courseName, students_studentId: studentId}).into(Courses)  
+                    let result1 = await tx.run(
+                        INSERT.into(Courses).entries({courseId: courseId, courseName: courseName, students_studentId: studentId})
+                    )
+
+                    let result2 = await tx.run(
+                        SELECT.from(Courses).where({students_studentId: stdId})
+                    )
+
+                    await tx.commit()
+
+                    return [result1,result2]
                 } catch (error) {
+                    await tx.rollback()
                     console.log(error)   
                 }
             }
@@ -36,23 +50,36 @@ module.exports = (srv) => {
         else if(courses.length != 0){      //If the record exists, the course cannot be added
             console.log("The record exists")
         } 
-
-        return Courses
+        
+        //return Courses
     });
 
+    srv.after('addCourse', async(req) => {
+        const tx = srv.transaction()
+        let {Courses} = srv.entities 
+        return await tx.read(Courses).where({students_studentId: stdId})
+    })
 
     srv.on('deleteCourse', async(req) => {
         let courseId = req.query.SELECT.from.ref[1].where[2].val
-        const db = srv.transaction(req)
-        let {Courses} = srv.entities
-        const regCourses = await db.read(Courses).where({students_studentId: stdId})
+        const tx = srv.transaction()
+        let {Courses} = srv.entities 
+        const regCourses = await tx.read(Courses).where({students_studentId: stdId})
+        
         if(regCourses.length === 1){                 //For one-to-many, a student at least should have a course
             console.log('Each student should register to a course')
             return
         }
 
-        db.run([
+        tx.run([
             DELETE.from(Courses).where({students_studentId: stdId, courseId: courseId}) 
-        ])   
+        ])
+
+        tx.commit()
+
+        const regCourses2 = await tx.read(Courses).where({students_studentId: stdId})
+            
+        return regCourses2
     });
 };
+1
